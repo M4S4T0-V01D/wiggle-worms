@@ -82,20 +82,20 @@ const DEFAULT_LOOK = Object.assign({}, PRESETS[0], {
 const REALMS = [
   { id: 'nebula', name: 'Backyard Garden', kanji: '🌱', lvl: 1, mult: 1.0, bots: 22, tint: null,
     desc: 'Soft, squishy dirt full of yummy snacks. Every worm starts here!' },
-  { id: 'asteroids', name: 'Rocky Ground', kanji: '🪨', lvl: 3, mult: 1.4, bots: 22, tint: 'rgba(60,60,70,.10)',
+  { id: 'asteroids', name: 'Rocky Ground', kanji: '🪨', lvl: 2, mult: 1.4, bots: 22, tint: 'rgba(60,60,70,.10)',
     desc: 'Big rolling rocks! Bonk one with your head and you\'re out. Lots of gems though.' },
-  { id: 'sun', name: 'Lava Pit', kanji: '🌋', lvl: 5, mult: 1.8, bots: 24, tint: 'rgba(255,60,0,.10)',
+  { id: 'sun', name: 'Lava Pit', kanji: '🌋', lvl: 3, mult: 1.8, bots: 24, tint: 'rgba(255,60,0,.10)',
     desc: 'A bubbling lava pool in the middle pulls you in. Watch out for hot heat waves!' },
-  { id: 'blackhole', name: 'Swirly Sinkhole', kanji: '🌀', lvl: 8, mult: 2.3, bots: 24, tint: 'rgba(0,30,60,.12)',
+  { id: 'blackhole', name: 'Swirly Sinkhole', kanji: '🌀', lvl: 5, mult: 2.3, bots: 24, tint: 'rgba(0,30,60,.12)',
     desc: 'Everything swirls toward the drain in the middle. Snack fast, don\'t fall in!' },
-  { id: 'palace', name: 'Crystal Cave', kanji: '💎', lvl: 12, mult: 3.0, bots: 20, tint: 'rgba(120,80,255,.08)',
+  { id: 'palace', name: 'Crystal Cave', kanji: '💎', lvl: 7, mult: 3.0, bots: 20, tint: 'rgba(120,80,255,.08)',
     desc: 'WORMZILLA lives here. Make it bonk into you for a giant pile of gems!' },
 ];
 
 const RANKS = ['Tiny Wiggler', 'Noodle', 'Squirmer', 'Garden Worm', 'Night Crawler', 'Mud Master', 'Tunnel King',
   'Earth Shaker', 'Mega Worm', 'Legend Worm', 'Worm Emperor'];
 function rankName(lvl) { return RANKS[Math.min(RANKS.length - 1, Math.floor((lvl - 1) / 2))]; }
-function xpFor(lvl) { return Math.round(120 * Math.pow(lvl, 1.55)); } // xp needed to go from lvl to lvl+1
+function xpFor(lvl) { return Math.round(90 * Math.pow(lvl, 1.45)); } // xp needed to go from lvl to lvl+1
 
 const QUEST_TEMPLATES = [
   { id: 'mass', text: n => `Grow to ${n} long in one game`, stat: 'bestLife', amounts: [300, 600, 1000, 1800, 3000], reward: n => Math.round(n / 4) },

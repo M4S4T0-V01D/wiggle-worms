@@ -6,10 +6,10 @@ const Realm = (() => {
   function setup(realm) {
     R = realm; rocks = []; flares = []; gates = []; bossDue = performance.now() + 4000;
     if (R.id === 'asteroids') {
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 55; i++) {
         const p = randInArena(400), rad = rand(40, 150), verts = [];
         for (let k = 0; k < 11; k++) verts.push(rad * rand(0.75, 1.1));
-        rocks.push({ x: p.x, y: p.y, r: rad, vx: rand(-0.4, 0.4), vy: rand(-0.4, 0.4), rot: rand(0, TAU), vr: rand(-0.003, 0.003), verts,
+        rocks.push({ x: p.x, y: p.y, r: rad, vx: rand(-0.2, 0.2), vy: rand(-0.2, 0.2), rot: rand(0, TAU), vr: rand(-0.003, 0.003), verts,
           craters: [0, 1, 2].map(() => ({ a: rand(0, TAU), d: rand(0, rad * 0.5), r: rand(rad * 0.1, rad * 0.22) })) });
       }
     }
@@ -44,7 +44,7 @@ const Realm = (() => {
       }
     }
     if (R.id === 'sun' || R.id === 'blackhole') {
-      const sun = R.id === 'sun', core = sun ? SUN_R : HOLE_R, reach = sun ? 3000 : 3800, str = sun ? 1.3 : 2.4;
+      const sun = R.id === 'sun', core = sun ? SUN_R : HOLE_R, reach = sun ? 3000 : 3800, str = sun ? 0.7 : 1.3;
       for (const d of world.dragons) {
         if (!d.alive || !d.draw[0]) continue;
         const h = d.draw[0], dist = Math.hypot(h.x, h.y) || 1;
@@ -67,7 +67,7 @@ const Realm = (() => {
       }
     }
     if (R.id === 'sun') {
-      if (now > nextFlare) { flares.push({ r: SUN_R, born: now }); nextFlare = now + rand(6000, 10000); }
+      if (now > nextFlare) { flares.push({ r: SUN_R, born: now }); nextFlare = now + rand(10000, 16000); }
       for (let i = flares.length - 1; i >= 0; i--) {
         const fl = flares[i]; fl.r += 9 * f;
         if (fl.r > 2400) { flares.splice(i, 1); continue; }
@@ -76,7 +76,7 @@ const Realm = (() => {
           const h = d.draw[0], dist = Math.hypot(h.x, h.y);
           if (Math.abs(dist - fl.r) < 30) { // heat wave: drop a fifth of your length
             d.flareHit = fl;
-            const lost = d.mass * 0.2; d.mass -= lost;
+            const lost = d.mass * 0.1; d.mass -= lost;
             for (let k = 0; k < 8; k++) addFood(h.x + rand(-60, 60), h.y + rand(-60, 60), lost / 8, rand(10, 50));
             burst(h.x, h.y, '#ff9a3c', 25, 5);
             if (d === player) feedMsg('<b style="color:#ff9a3c">Heat wave!</b> Ouch, hot hot hot!');
@@ -98,7 +98,7 @@ const Realm = (() => {
       pattern: 'tiger', horns: 'crown', spines: 'spikes', whiskers: 'angry', tail: 'rattle', trail: 'sparks', title: 'King of the Dirt' };
     const d = new Dragon(p.x, p.y, look, 'WORMZILLA', false);
     d.boss = true; d.mass = 5000;
-    d.mind = { t: 0, wander: d.angle, aggro: 1 };
+    d.mind = { t: 0, wander: d.angle, aggro: 0.5 };
     for (let i = 0; i < 900; i++) { d.target = d.angle + 0.02; d.update(1, 0); }
     return d;
   }

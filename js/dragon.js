@@ -58,7 +58,7 @@ class Dragon {
     let d = this.target - this.angle;
     while (d > Math.PI) d -= Math.PI * 2;
     while (d < -Math.PI) d += Math.PI * 2;
-    const turn = 0.11 / (1 + this.width / 45) * f;
+    const turn = 0.11 / (1 + this.width / 45) * f * (this.isPlayer ? 1.5 : 1); // the player turns quicker
     this.angle += Math.max(-turn, Math.min(turn, d));
 
     if (this.boost && this.mass < 30 && !this.has('thunder', now)) this.boost = false;

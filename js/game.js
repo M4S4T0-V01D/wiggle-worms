@@ -29,7 +29,7 @@ function initWorld(realm) {
   world.dragons.length = 0; world.food.length = 0; world.pearls.length = 0; world.parts.length = 0; world.coins.length = 0;
   player = null;
   Realm.setup(realm);
-  BOT_COUNT = realm.bots;
+  BOT_COUNT = Math.round(realm.bots * 0.7); // fewer worms: easier for little players
   pearlTarget = realm.id === 'palace' ? 12 : PEARL_TARGET;
   spawnFood(); spawnPearls(); spawnCoins();
   for (let i = 0; i < BOT_COUNT; i++) world.dragons.push(makeBot());
@@ -37,6 +37,17 @@ function initWorld(realm) {
 
 function kill(d, by, why) {
   if (!d.alive) return;
+  if (d === player && d.lives > 1) { // easy mode: lose a heart and turn ghost for a moment instead
+    const now = performance.now();
+    if (d.saveUntil > now) return;
+    d.lives--; d.saveUntil = now + 3000;
+    d.power = 'spirit'; d.powerEnd = now + 3000;
+    const h0 = d.pts[0], hd = Math.hypot(h0.x, h0.y) || 1;
+    if ((Realm.cur.id === 'sun' || Realm.cur.id === 'blackhole') && hd < 1100) { const k = 1100 / hd; for (const q of d.pts) { q.x *= k; q.y *= k; } d.angle = Math.atan2(h0.y, h0.x); d.buildDraw(); }
+    burst(d.draw[0].x, d.draw[0].y, '#ff5a7a', 30, 5);
+    feedMsg(`<b style="color:#ff8fb1">Phew! ❤️ saved you</b> (${d.lives - 1} left)`);
+    return;
+  }
   d.alive = false;
   const D = d.draw, share = (d.mass * 0.75) / Math.max(1, D.length / 2);
   for (let i = 0; i < D.length; i += 2) {
@@ -133,21 +144,29 @@ function step(f, now) {
   for (const a of world.dragons) {
     if (!a.alive) continue;
     const h = a.draw[0];
-    if (Math.hypot(h.x, h.y) > W_R) { kill(a, null); continue; }
+    const hd = Math.hypot(h.x, h.y);
+    if (hd > W_R) {
+      if (a === player) { // bump off the bedrock and turn back toward the middle
+        const p0 = a.pts[0]; p0.x *= (W_R - 10) / hd; p0.y *= (W_R - 10) / hd;
+        a.angle = Math.atan2(-h.y, -h.x); a.buildDraw();
+        continue;
+      }
+      kill(a, null); continue;
+    }
     if (a.has('spirit', now)) continue;
-    const hr = a.width * 0.4, ag = a.has('giant', now);
+    const easy = a === player, hr = a.width * (easy ? 0.25 : 0.4), ag = a.has('giant', now);
     for (const b of world.dragons) {
       if (b === a || !b.alive || b.has('spirit', now)) continue;
       if (Math.abs(b.bx - h.x) > b.bw || Math.abs(b.by - h.y) > b.bh) continue;
       const D = b.draw;
       let hit = false;
       for (let i = 0; i < D.length; i++) {
-        const e = D[i], rr = hr + e.r * 0.85;
+        const e = D[i], rr = hr + e.r * (easy ? 0.6 : 0.85);
         const dx = e.x - h.x, dy = e.y - h.y;
         if (dx * dx + dy * dy < rr * rr) {
           // head-on: a Mega worm wins, otherwise the smaller worm is out
           const bg = b.has('giant', now);
-          if (i < 3 && (ag && !bg || ag === bg && a.mass > b.mass)) { kill(b, a); } else { kill(a, b); hit = true; }
+          if (i < 3 && (ag && !bg || ag === bg && a.mass * (easy ? 1.5 : 1) > b.mass)) { kill(b, a); } else { kill(a, b); hit = true; }
           break;
         }
       }
@@ -300,7 +319,7 @@ function hud(now) {
   if (player && player.alive) {
     const rank = ranked.indexOf(player) + 1;
     document.getElementById('score').innerHTML =
-      `Length <b>${player.mass | 0}</b><br>Rank ${rank} of ${ranked.length} · Bonks ${player.kills}<br><span class="jade">💎 ${player.coins * 5}</span> · ${Realm.cur.kanji} ${Realm.cur.name}`;
+      `Length <b>${player.mass | 0}</b> <span class="lives">${'❤️'.repeat(Math.max(0, player.lives))}</span><br>Rank ${rank} of ${ranked.length} · Bonks ${player.kills}<br><span class="jade">💎 ${player.coins * 5}</span> · ${Realm.cur.kanji} ${Realm.cur.name}`;
     const pe = document.getElementById('pearl');
     if (player.power) {
       const P = POWERS[player.power];
@@ -353,7 +372,8 @@ function startGame() {
   if (player) { const i = world.dragons.indexOf(player); if (i >= 0) world.dragons.splice(i, 1); }
   const p = randInArena(1500);
   player = new Dragon(p.x, p.y, Object.assign({}, P.look), P.name || 'Wormy', true);
-  player.power = 'spirit'; player.powerEnd = performance.now() + 3000; // brief spawn grace
+  player.power = 'spirit'; player.powerEnd = performance.now() + 5000; // spawn grace
+  player.lives = 3;
   player.born = performance.now();
   world.dragons.push(player);
   cam.x = p.x; cam.y = p.y;

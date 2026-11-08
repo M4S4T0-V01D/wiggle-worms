@@ -96,6 +96,7 @@ canvas#c { display: block; width: 100vw; height: 100vh; cursor: crosshair; }
 #score { position: absolute; left: 20px; bottom: 18px; font-size: 18px; text-shadow: 0 0 8px #000; line-height: 1.5; }
 #score b { color: #ffe14a; font-size: 26px; }
 #score .jade { color: #5dffb0; }
+#score .lives { font-size: 16px; letter-spacing: 2px; }
 #board { position: absolute; right: 16px; top: 14px; width: 220px; padding: 10px 14px; background: rgba(40,22,8,.5);
   border: 1px solid rgba(255,190,120,.25); border-radius: 10px; font-size: 13px; }
 #board h3 { font-weight: bold; color: #ffd0a0; letter-spacing: 3px; margin-bottom: 6px; font-size: 14px; }

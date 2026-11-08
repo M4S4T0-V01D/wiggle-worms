@@ -111,8 +111,8 @@ function makeBot() {
   const used = new Set(world.dragons.map(d => d.name));
   const free = BOT_NAMES.filter(n => !used.has(n));
   const d = new Dragon(p.x, p.y, kind, free.length ? free[(Math.random() * free.length) | 0] : 'Worm', false);
-  d.mass = Math.random() < 0.25 ? rand(300, 1200) : rand(40, 250);
-  d.mind = { t: 0, wander: d.angle, aggro: rand(0.2, 0.9) };
+  d.mass = Math.random() < 0.12 ? rand(250, 700) : rand(40, 220);
+  d.mind = { t: 0, wander: d.angle, aggro: rand(0.1, 0.5) };
   // unfurl the body in a lazy curve before it appears
   const frames = Math.min(900, d.length / 4.3);
   for (let i = 0; i < frames; i++) { d.target = d.angle + 0.02; d.update(1, 0); }
@@ -164,7 +164,7 @@ function thinkBot(b, now) {
   if (b.mass > 120 && Math.random() < m.aggro) {
     let prey = null, pd = 520;
     for (const o of world.dragons) {
-      if (o === b || !o.alive || o.has('spirit', now)) continue;
+      if (o === b || !o.alive || o.has('spirit', now) || (o.isPlayer && !b.boss)) continue;
       const d = Math.hypot(o.draw[0].x - h.x, o.draw[0].y - h.y);
       if (d < pd && o.mass < b.mass * 1.4) { pd = d; prey = o; }
     }
