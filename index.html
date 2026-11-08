@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wiggle Worms 🪱 Underground Worm Battle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="score"></div>
+  <div id="board"><h3>🏆 Biggest Worms</h3><ol id="lb"></ol></div>
+  <canvas id="mini" width="160" height="160"></canvas>
+  <div id="pearl"></div>
+  <div id="feed"></div>
+</div>
+
+<div id="menu">
+  <header id="top">
+    <h1>🪱 Wiggle<span>WORMS</span></h1>
+    <div id="profile">
+      <input id="name" maxlength="16" placeholder="Your worm's name" autocomplete="off">
+      <div class="lv">Lv <b id="lvl">1</b> <span id="rank"></span></div>
+      <div class="xp"><i id="xpfill"></i><span id="xptext"></span></div>
+      <div class="jd">💎 <b id="jade">0</b></div>
+    </div>
+  </header>
+  <nav id="tabs">
+    <button data-t="play" class="on">Play</button><button data-t="forge">Worm Shop</button><button data-t="quests">Quests <sup id="qbadge"></sup></button><button data-t="stats">Stats</button>
+  </nav>
+
+  <section id="tab-play" class="tab">
+    <div id="realms"></div>
+    <p id="rdesc"></p>
+    <button id="play">Wiggle!</button>
+    <p class="help">Mouse to steer · Hold click / Space to zoom · Grab the <b>power-up bubbles</b> for super powers<br>
+    Make other worms bonk into you. Collect <b class="g">💎 gems</b> to buy hats and cool stuff!</p>
+  </section>
+
+  <section id="tab-forge" class="tab hidden">
+    <canvas id="preview"></canvas>
+    <div id="forge">
+      <div id="presets"></div>
+      <div id="colors"></div>
+      <div id="slots"></div>
+      <div id="items"></div>
+    </div>
+  </section>
+
+  <section id="tab-quests" class="tab hidden">
+    <div id="qlist"></div>
+    <p class="help">Quests refresh as you complete them. Harder ones appear as you level.</p>
+  </section>
+
+  <section id="tab-stats" class="tab hidden"><div id="slist"></div></section>
+</div>
+
+<div id="results" class="hidden">
+  <h2>Bonk! Game Over</h2>
+  <p id="rcause"></p>
+  <div id="rrows"></div>
+  <div id="rlvl"></div>
+  <div class="xp big"><i id="rxpfill"></i><span id="rxptext"></span></div>
+  <div class="btns"><button id="again">Wiggle Again</button><button id="tomenu">Menu</button></div>
+</div>
+
+<script src="js/bg.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/save.js"></script>
+<script src="js/dragon.js"></script>
+<script src="js/parts.js"></script>
+<script src="js/world.js"></script>
+<script src="js/realms.js"></script>
+<script src="js/game.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>
